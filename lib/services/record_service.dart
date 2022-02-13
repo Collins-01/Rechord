@@ -21,7 +21,7 @@ class RecordService extends ChangeNotifier {
   bool _isRecording = false;
   bool get isRecording => _isRecording;
 // *Stop Recording Function here
-  stopRecording(bool value) async {
+  stopRecording() async {
     await _record.stop();
     _isRecording = false;
     _timer.cancel();
@@ -29,13 +29,21 @@ class RecordService extends ChangeNotifier {
   }
 
 //*Start Recording function here
+
+  startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _currentDuration = timer.tick;
+      notifyListeners();
+      print("New Time: $_currentDuration");
+    });
+  }
+
   startRecording() async {
     if (await _record.hasPermission()) {
       await _record.start();
       _isRecording = true;
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        _currentDuration = timer.tick;
-      });
+      startTimer();
+
       notifyListeners();
     } else {
       await requestPermission();

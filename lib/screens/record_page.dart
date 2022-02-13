@@ -5,6 +5,7 @@ import 'package:rechord/screens/recorded_items_page.dart';
 import 'package:rechord/services/record_service.dart';
 import 'dart:io';
 import 'package:rechord/utils/app_colors.dart';
+import 'package:rechord/utils/format_duration.dart';
 import 'package:rechord/widgets/build_ripple_button.dart';
 import 'package:rechord/widgets/build_round_buttons.dart';
 import 'package:rechord/widgets/form_dialog.dart';
@@ -22,14 +23,14 @@ class RecordPage extends StatelessWidget {
           child: Stack(
             children: [
               Column(
-                children: const [
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     height: 20,
                   ),
                   Center(
                     child: Text(
-                      "00:00",
-                      style: TextStyle(
+                      formatDuration(model.currentDuration).toString(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -66,28 +67,30 @@ class RecordPage extends StatelessWidget {
                     BuildRippleButton(
                       isRecording: model.isRecording,
                       callback: () {
-                        model.startRecording();
+                        model.isRecording
+                            ? model.stopRecording()
+                            : model.startRecording();
                       },
                     ),
                     BuildRoundButtons(
                       callback: () async {
                         //?if user is not recording, navigate to record list
-                        if (model.isRecording) {
-                          // if (Platform.isIOS) {
-                          //   await showCupertinoDialog(
-                          //     context: context,
-                          //     builder: (_) => FormDialog(
-                          //       saveCallBack: (String value) {},
-                          //     ),
-                          //   );
-                          // } else {
-                          //   await showDialog(
-                          //     context: context,
-                          //     builder: (_) => FormDialog(
-                          //       saveCallBack: (String value) {},
-                          //     ),
-                          //   );
-                          // }
+                        if (model.currentDuration > 0) {
+                          if (Platform.isIOS) {
+                            await showCupertinoDialog(
+                              context: context,
+                              builder: (_) => FormDialog(
+                                saveCallBack: (String value) {},
+                              ),
+                            );
+                          } else {
+                            await showDialog(
+                              context: context,
+                              builder: (_) => FormDialog(
+                                saveCallBack: (String value) {},
+                              ),
+                            );
+                          }
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(
