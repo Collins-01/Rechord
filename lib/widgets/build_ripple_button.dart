@@ -4,8 +4,9 @@ import 'package:rechord/utils/app_colors.dart';
 class BuildRippleButton extends StatelessWidget {
   final bool isRecording;
   final VoidCallback callback;
+  final String? label;
   const BuildRippleButton(
-      {Key? key, required this.callback, required this.isRecording})
+      {Key? key, required this.callback, required this.isRecording, this.label})
       : super(key: key);
 
   @override
@@ -23,7 +24,11 @@ class BuildRippleButton extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           child: Text(
-            isRecording ? "Stop" : "Rec",
+            label != null
+                ? label!
+                : isRecording
+                    ? "Stop"
+                    : "Rec",
             style: const TextStyle(fontSize: 17, color: Colors.white),
           ),
           height: 70,

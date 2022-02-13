@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rechord/screens/components/build_play_dialog.dart';
 import 'package:rechord/screens/recorded_items_page.dart';
 import 'package:rechord/services/record_service.dart';
 import 'dart:io';
@@ -12,11 +13,13 @@ import 'package:rechord/widgets/form_dialog.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 
 class RecordPage extends StatelessWidget {
-  const RecordPage({Key? key}) : super(key: key);
+  RecordPage({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.primaryColor,
       body: Consumer<RecordService>(builder: (context, model, child) {
         return SafeArea(
@@ -43,13 +46,36 @@ class RecordPage extends StatelessWidget {
                 top: MediaQuery.of(context).size.height / 3,
                 left: 0,
                 right: 0,
-                child: RippleAnimation(
-                  repeat: true,
-                  color: Colors.blue,
-                  minRadius: 90,
-                  ripplesCount: 9,
-                  child: Container(),
-                ),
+                child: model.currentDuration > 0
+                    ? RippleAnimation(
+                        repeat: true,
+                        color: Colors.blue,
+                        minRadius: 90,
+                        ripplesCount: model.isPaused ? 1 : 9,
+                        child: Container(),
+                      )
+                    : !model.getHasStopped
+                        ? const Center(
+                            child: Text(
+                              "Start",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: TextButton(
+                              onPressed: model.getHasStopped
+                                  ? () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (_) =>  BuildPlayDialog(),
+                                      );
+                                    }
+                                  : () {},
+                              child: const Text("Play"),
+                            ),
+                          ),
               ),
               Positioned(
                 bottom: 20,
