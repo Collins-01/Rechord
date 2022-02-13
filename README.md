@@ -1,5 +1,5 @@
-# Food Delivery UI.
-A food delivery UI, built with flutter.
+# Rechord.
+A flutter application that allows you record audio/sound.
 
 ## Tools
 - record `library for recording`
