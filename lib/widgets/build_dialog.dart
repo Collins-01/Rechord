@@ -35,7 +35,10 @@ class BuildDialog extends StatelessWidget {
             child: const Text("No"),
           ),
           TextButton(
-            onPressed: deleteCallBack,
+            onPressed: () {
+              deleteCallBack();
+              Navigator.pop(context);
+            },
             child: const Text("Yes"),
           ),
         ],

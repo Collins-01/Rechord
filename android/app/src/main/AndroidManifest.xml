@@ -1,12 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.rechord">
    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-<!-- Optional, you'll have to check this permission by yourself. -->
+
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.INTERNET"/>
-   <application ... android:usesCleartextTraffic="true">
+   
    <application
         android:label="rechord"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

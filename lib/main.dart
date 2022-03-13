@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rechord/locator.dart';
 import 'package:rechord/screens/record_page.dart';
 import 'package:provider/provider.dart';
 import 'package:rechord/services/record_service.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setUpLocator();
   runApp(const MyApp());
 }
 

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:rechord/locator.dart';
+import 'package:rechord/models/record_model.dart';
+import 'package:rechord/services/record_service.dart';
 import 'package:rechord/utils/app_colors.dart';
 
 class PlayingRecord extends StatefulWidget {
-  const PlayingRecord({Key? key}) : super(key: key);
+  final RecordModel model;
+  const PlayingRecord({Key? key, required this.model}) : super(key: key);
 
   @override
   State<PlayingRecord> createState() => _PlayingRecordState();
 }
 
 class _PlayingRecordState extends State<PlayingRecord> {
+  final RecordService _service = locator<RecordService>();
   double value = 0;
   change(double val) {
     setState(() {
@@ -43,7 +48,10 @@ class _PlayingRecordState extends State<PlayingRecord> {
                     width: 20,
                   ),
                   const Text(
-                    "Podcast1",
+                    // widget.model.name.split('.').first,
+                    'Name',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -63,7 +71,17 @@ class _PlayingRecordState extends State<PlayingRecord> {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      print(widget.model.path);
+                      await _service.audioPlayer.stop();
+                      await _service.audioPlayer
+                          .setUrl(widget.model.path)
+                          .then((duration) async {
+                        // ignore: avoid_print
+
+                        await _service.audioPlayer.play();
+                      });
+                    },
                     icon: const Icon(
                       Icons.play_arrow,
                       color: Colors.white,

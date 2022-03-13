@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rechord/locator.dart';
 import 'package:rechord/screens/components/build_record_item_tile.dart';
 import 'package:rechord/screens/components/playing_record.dart';
+import 'package:rechord/services/record_service.dart';
 import 'package:rechord/utils/app_colors.dart';
 import 'package:rechord/utils/size_config.dart';
 
@@ -12,7 +14,13 @@ class RecordedItemsPage extends StatefulWidget {
 }
 
 class _RecordedItemsPageState extends State<RecordedItemsPage> {
-  final List<bool> _items = List.generate(20, (index) => false);
+  final RecordService _recordService = locator<RecordService>();
+  @override
+  void initState() {
+    _recordService.fetchItems();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,26 +54,25 @@ class _RecordedItemsPageState extends State<RecordedItemsPage> {
               const SizedBox(
                 height: 24,
               ),
-              Expanded(
-                  child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                    children: List.generate(
-                  20,
-                  (index) {
-                    //   if (_items[index] = true) {
-                    //     return PlayingRecord();
-                    //   } else {
-                    //     return const BuildRecordItemTile();
-                    //   }
-                    // }
-
-                    return index == 0
-                        ? PlayingRecord()
-                        : const BuildRecordItemTile();
-                  },
-                )),
-              ))
+              _recordService.loadingItems
+                  ? const Center(child: CircularProgressIndicator.adaptive())
+                  : Expanded(
+                      child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                          children: List.generate(
+                        _recordService.recordList.length,
+                        (index) {
+                          return index == 0
+                              ? PlayingRecord(
+                                  model: _recordService.recordList[index],
+                                )
+                              : BuildRecordItemTile(
+                                  model: _recordService.recordList[index],
+                                );
+                        },
+                      )),
+                    ))
             ],
           ),
         ),

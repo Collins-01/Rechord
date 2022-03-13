@@ -1,10 +1,17 @@
 import 'package:flutter/foundation.dart';
+import 'package:rechord/locator.dart';
+import 'package:rechord/models/record_model.dart';
+import 'package:rechord/services/storage_service.dart';
+import 'package:rechord/utils/app_logger.dart';
 import 'package:record/record.dart';
 import 'dart:async';
 import 'package:just_audio/just_audio.dart' as ap;
 
 class RecordService extends ChangeNotifier {
+  final StorageService _storageService = locator<StorageService>();
+  String className = "RecordService";
   final ap.AudioPlayer _audioPlayer = ap.AudioPlayer();
+  ap.AudioPlayer get audioPlayer => _audioPlayer;
   // *disspose method
   @override
   void dispose() {
@@ -34,6 +41,7 @@ class RecordService extends ChangeNotifier {
   stopRecording() async {
     var path = await _record.stop();
     _audioPath = path!;
+    notifyListeners();
     ap.UriAudioSource uriAudio = ap.AudioSource.uri(Uri.parse(path));
     _isRecording = false;
     _timer.cancel();
@@ -61,7 +69,9 @@ class RecordService extends ChangeNotifier {
   startRecording() async {
     if (await _record.hasPermission()) {
       _hasStopped = false;
-      await _record.start();
+      await _record.start(
+        
+      );
       _isRecording = true;
       startTimer();
 
@@ -85,16 +95,40 @@ class RecordService extends ChangeNotifier {
     _isPausedRecordedAudio = false;
     await _audioPlayer.stop();
     await _audioPlayer.setUrl(_audioPath).then((duration) async {
+      // ignore: avoid_print
+
       _recordedAudioMaxDuration = duration!.inSeconds;
       await _audioPlayer.play();
-      // notifyListeners();
+      notifyListeners();
+      AppLogger.debug(className: className, message: _audioPath);
     });
     notifyListeners();
+    AppLogger.debug(className: className, message: 'Audio Played');
   }
 
   pauseRecordedAudio() async {
     await _audioPlayer.pause();
     _isPausedRecordedAudio = true;
     notifyListeners();
+    AppLogger.debug(className: className, message: 'Audio Paused');
+  }
+
+  List<RecordModel> _recordList = [];
+  List<RecordModel> get recordList => _recordList;
+  bool _loadingItems = false;
+  bool get loadingItems => _loadingItems;
+  fetchItems() async {
+    try {
+      var tempList = await _storageService.getRecordings();
+      _recordList = tempList;
+      notifyListeners();
+      AppLogger.debug(className: className, message: _recordList.toList());
+    } catch (e) {
+      //
+      _loadingItems = false;
+      notifyListeners();
+      AppLogger.debug(
+          className: className, message: "Error Fetching Items was: $e");
+    }
   }
 }

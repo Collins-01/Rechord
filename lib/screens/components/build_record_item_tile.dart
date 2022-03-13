@@ -2,11 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rechord/locator.dart';
+import 'package:rechord/models/record_model.dart';
+import 'package:rechord/services/record_service.dart';
+import 'package:rechord/services/storage_service.dart';
 import 'package:rechord/utils/app_colors.dart';
 import 'package:rechord/widgets/build_dialog.dart';
 
 class BuildRecordItemTile extends StatelessWidget {
-  const BuildRecordItemTile({Key? key}) : super(key: key);
+  final RecordModel model;
+  BuildRecordItemTile({Key? key, required this.model}) : super(key: key);
+  final RecordService _service = locator<RecordService>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,11 @@ class BuildRecordItemTile extends StatelessWidget {
             await showDialog(
                 context: context,
                 builder: (_) => BuildDialog(
-                      deleteCallBack: () {},
+                      deleteCallBack: () async {
+                        await locator<StorageService>().deleteItem(model.path);
+
+                        // Navigator.pop(context);
+                      },
                     ));
           }
         },
@@ -72,7 +82,14 @@ class BuildRecordItemTile extends StatelessWidget {
                 ),
                 const Spacer(),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await _service.audioPlayer.stop();
+                      await _service.audioPlayer.setUrl(model.path).then(
+                        (duration) async {
+                          await _service.audioPlayer.play();
+                        },
+                      );
+                    },
                     icon: const Icon(
                       Icons.play_arrow,
                       color: Colors.white,

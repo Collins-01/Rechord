@@ -3,8 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:rechord/services/record_service.dart';
 import 'package:just_audio/just_audio.dart' as ap;
 
-class BuildPlayDialog extends StatelessWidget {
+class BuildPlayDialog extends StatefulWidget {
   BuildPlayDialog({Key? key}) : super(key: key);
+
+  @override
+  State<BuildPlayDialog> createState() => _BuildPlayDialogState();
+}
+
+class _BuildPlayDialogState extends State<BuildPlayDialog> {
   final ap.AudioPlayer _audioPlayer = ap.AudioPlayer();
 
   @override
@@ -21,17 +27,17 @@ class BuildPlayDialog extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () async {
-                      model.isPausedRecordedAudio
-                          ? model.playRecordedAudio()
-                          : model.pauseRecordedAudio();
+                      setState(() {
+                        model.isPausedRecordedAudio
+                            ? model.playRecordedAudio()
+                            : model.pauseRecordedAudio();
+                      });
                     },
-                    icon: !model.isPausedRecordedAudio
+                    icon: model.isPausedRecordedAudio
                         ? const Icon(
                             Icons.play_arrow,
                           )
-                        : const Icon(
-                            Icons.pause
-                          ),
+                        : const Icon(Icons.pause),
                   ),
                   const SizedBox(
                     width: 10,

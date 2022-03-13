@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rechord/locator.dart';
 import 'package:rechord/screens/components/build_play_dialog.dart';
 import 'package:rechord/screens/recorded_items_page.dart';
 import 'package:rechord/services/record_service.dart';
+import 'package:rechord/services/storage_service.dart';
 import 'dart:io';
 import 'package:rechord/utils/app_colors.dart';
 import 'package:rechord/utils/format_duration.dart';
@@ -69,13 +71,52 @@ class RecordPage extends StatelessWidget {
                                   ? () async {
                                       await showDialog(
                                         context: context,
-                                        builder: (_) =>  BuildPlayDialog(),
+                                        builder: (_) => BuildPlayDialog(),
                                       );
                                     }
                                   : () {},
                               child: const Text("Play"),
                             ),
                           ),
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: BuildRoundButtons(
+                      callback: () async {
+                        //delete current recording
+                        await locator<StorageService>()
+                            .saveItem('testing003', model.audioPath);
+                      },
+                      icon: Icons.save,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: BuildRoundButtons(
+                      callback: () async {
+                        //delete current recording
+                        await locator<StorageService>()
+                            .deleteItem('testing002');
+                      },
+                      icon: Icons.delete_sweep_rounded,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: BuildRoundButtons(
+                      callback: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const RecordedItemsPage(),
+                          ),
+                        );
+                      },
+                      icon: Icons.arrow_right,
+                    ),
+                  ),
+                ],
               ),
               Positioned(
                 bottom: 20,
@@ -84,12 +125,15 @@ class RecordPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    BuildRoundButtons(
-                      callback: () {
-                        //delete current recording
-                      },
-                      icon: Icons.delete,
-                    ),
+                    model.isRecording
+                        ? const SizedBox.shrink()
+                        : BuildRoundButtons(
+                            callback: () async {
+                              //delete current recording
+                              await locator<StorageService>().getRecordings();
+                            },
+                            icon: Icons.delete,
+                          ),
                     BuildRippleButton(
                       isRecording: model.isRecording,
                       callback: () {
@@ -98,35 +142,43 @@ class RecordPage extends StatelessWidget {
                             : model.startRecording();
                       },
                     ),
-                    BuildRoundButtons(
-                      callback: () async {
-                        //?if user is not recording, navigate to record list
-                        if (model.currentDuration > 0) {
-                          if (Platform.isIOS) {
-                            await showCupertinoDialog(
-                              context: context,
-                              builder: (_) => FormDialog(
-                                saveCallBack: (String value) {},
-                              ),
-                            );
-                          } else {
-                            await showDialog(
-                              context: context,
-                              builder: (_) => FormDialog(
-                                saveCallBack: (String value) {},
-                              ),
-                            );
-                          }
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const RecordedItemsPage(),
-                            ),
-                          );
-                        }
-                      },
-                      icon: Icons.layers,
-                    ),
+                    model.getHasStopped || model.audioPath.isNotEmpty
+                        ? BuildRoundButtons(
+                            callback: () async {
+                              if (model.currentDuration > 0) {
+                                if (Platform.isIOS) {
+                                  await showCupertinoDialog(
+                                    context: context,
+                                    builder: (_) => FormDialog(
+                                      saveCallBack: (String value) {},
+                                    ),
+                                  );
+                                } else {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (_) => FormDialog(
+                                      saveCallBack: (String value) async {
+                                        await locator<StorageService>()
+                                            .saveItem(value, model.audioPath);
+                                        Future.delayed(
+                                            const Duration(seconds: 1),
+                                            () => Navigator.pop(context));
+                                      },
+                                    ),
+                                  );
+                                }
+                              } else {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const RecordedItemsPage(),
+                                  ),
+                                );
+                              }
+                              // //?if user is not recording, navigate to record list
+                            },
+                            icon: Icons.layers,
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
               )
