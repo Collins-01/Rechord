@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rechord/locator.dart';
+import 'package:rechord/screens/all_recordings_screen.dart';
+import 'package:rechord/screens/init_screen.dart';
 import 'package:rechord/screens/record_page.dart';
 import 'package:provider/provider.dart';
+import 'package:rechord/screens/recording_screen.dart';
 import 'package:rechord/services/record_service.dart';
 
 void main() {
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: RecordPage(),
+        home: const AllRecordingsScreen(),
       ),
     );
   }
