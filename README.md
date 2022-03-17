@@ -3,13 +3,16 @@ A flutter application that allows you record audio/sound.
 
 ## Tools
 - record `library for recording`
-- provider `state-management`
-- premissiom_handler `Requesting permissions for both platforms`
-- path_provider `For downloading recorded files to the phone`
+- flutter_riverpod `state-management`
+- hooks_riverpod `Easy Use of Statemanagement`
+- path_provider `For Locating Paths in user's device`
+- flutter_secure_storage `Caching of recorded files`
+- intl `Formatting of DateTime`
 - flutter `v2.5.0 - mobile sdk`
+- simple_ripple_animation `For Ripple ANimation Effect`
 
 ![one](./screenshots/1.png)
 ![one](./screenshots/2.png)
-<!-- ![one](./screenshots/3.png)
-![one](./screenshots/4.png) -->
+![one](./screenshots/3.png)
+![one](./screenshots/4.png)
 

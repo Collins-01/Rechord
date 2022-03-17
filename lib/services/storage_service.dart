@@ -1,10 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rechord/models/record_model.dart';
 import 'package:rechord/utils/app_logger.dart';
+import 'package:rechord/utils/constants.dart';
 
 class StorageService {
+  StorageService._();
+  static final StorageService _instance = StorageService._();
+  factory StorageService() => _instance;
   String className = 'StorageService';
+
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   // * Works
   saveItem(String fileName, String audioPath) async {
     try {
@@ -45,10 +54,21 @@ class StorageService {
 
   Future<List<RecordModel>> getRecordings() async {
     try {
+      // var hasKey = await _storage.read(key: Constants.record);
+      // if (hasKey == null || hasKey.isEmpty) {
+      //   return [];
+      //   //no key stored
+      // } else {
+      //   var decodedData = jsonDecode(hasKey);
+      //   List<RecordModel> _recordList = decodedData
+      //       .map<RecordModel>((e) => RecordModel.fromJson(e))
+      //       .toList();
+      //   return _recordList;
+      // }
       Directory directory = await getTemporaryDirectory();
       if (directory.existsSync()) {
-        var data = directory.listSync().map((e) =>
-            RecordModel(path: e.path, name: e.path.split('/cache/').last));
+        var data = directory.listSync().map((e) => RecordModel(
+            path: e.path, name: e.path.split('/cache/').last, date: ''));
         for (var element in data) {
           AppLogger.debug(
               className: className, message: "Audio Paths: ${element.path}");
@@ -63,3 +83,8 @@ class StorageService {
     }
   }
 }
+
+// * Expose Insatnce of class, making it global
+final storageService = Provider<StorageService>(
+  (ref) => StorageService(),
+);
