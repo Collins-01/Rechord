@@ -9,6 +9,7 @@ A flutter application that allows you record audio/sound.
 - flutter_secure_storage `Caching of recorded files`
 - intl `Formatting of DateTime`
 - flutter `v2.5.0 - mobile sdk`
+- simple_ripple_animation `For Ripple ANimation Effect`
 
 ![one](./screenshots/1.png)
 ![one](./screenshots/2.png)
