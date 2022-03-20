@@ -15,12 +15,13 @@ class StorageService {
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   // * Works
-  saveItem(String fileName, String audioPath) async {
+  saveItem(RecordModel recordModel) async {
     try {
       Directory directory = await getTemporaryDirectory();
       var data = directory.listSync().map((e) => e.path).toList().last;
       File _dir = File(data);
-      _dir.rename(data.split('/cache/').first + '/cache/' + fileName + '.m4a');
+      // _dir.rename(data.split('/cache/').first + '/cache/' + fileName + '.m4a');
+      //get the prvious list, then add to the list and save.
     } catch (e) {
       // ignore: avoid_print
       print("Error: $e");

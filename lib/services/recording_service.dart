@@ -14,6 +14,8 @@ class RecordingService extends ChangeNotifier {
   late Timer _timer;
   bool _isPaused = false;
   bool get isPaused => _isPaused;
+  String? _recordPath;
+  String? get recordPath => _recordPath;
 
   // *METHODS
   // * Start Audio Record
@@ -34,9 +36,11 @@ class RecordingService extends ChangeNotifier {
 //* Stop Recording
   stopRecord() async {
     try {
-      await _record.stop();
+      _recordPath = await _record.stop();
       _stopTimer();
+      notifyListeners();
     } catch (e) {
+      log("Erro Stopping:$e");
       //
     }
   }
@@ -46,7 +50,6 @@ class RecordingService extends ChangeNotifier {
       await _record.pause();
       _isPaused = true;
       _stopTimer();
-
       notifyListeners();
     } catch (e) {
       //

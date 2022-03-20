@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:rechord/models/record_model.dart';
 import 'package:rechord/services/recording_service.dart';
+import 'package:rechord/services/storage_service.dart';
 import 'package:rechord/utils/app_colors.dart';
 import 'package:rechord/utils/format_duration.dart';
 import 'package:rechord/widgets/app_logo.dart';
+import 'package:rechord/widgets/form_dialog.dart';
 
 class RecordingScreen extends ConsumerStatefulWidget {
   const RecordingScreen({Key? key}) : super(key: key);
@@ -104,6 +107,30 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
                       IconButton(
                         onPressed: () {
                           model.stopRecord();
+                          Future.delayed(
+                            const Duration(seconds: 1),
+                            () async {
+                              showDialog(
+                                context: context,
+                                builder: (_) => FormDialog(
+                                  saveCallBack: (v) {
+                                    if (model.recordPath == null) {
+                                      //throw or display error.
+                                    }
+                                    ref.read(storageService).saveItem(
+                                          RecordModel(
+                                            path: model.recordPath!,
+                                            name: v,
+                                            date: DateTime.now()
+                                                .toLocal()
+                                                .toString(),
+                                          ),
+                                        );
+                                  },
+                                ),
+                              );
+                            },
+                          );
                         },
                         icon: const Icon(
                           CupertinoIcons.stop,
