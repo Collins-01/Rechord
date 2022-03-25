@@ -126,6 +126,9 @@ class _RecordingScreenState extends ConsumerState<RecordingScreen> {
                                                 .toString(),
                                           ),
                                         );
+                                    ref.read(storageService).getRecordings();
+                                    Navigator.pop(context);
+                                    ref.read(storageService).getRecordings();
                                   },
                                 ),
                               );
