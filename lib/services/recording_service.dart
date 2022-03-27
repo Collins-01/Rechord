@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rechord/services/storage_service.dart';
 import 'package:record/record.dart';
 
 class RecordingService extends ChangeNotifier {
@@ -36,7 +37,7 @@ class RecordingService extends ChangeNotifier {
 //* Stop Recording
   stopRecord() async {
     try {
-      _recordPath = await _record.stop();
+      _recordPath = _recordPath = await _record.stop();
       _stopTimer();
       notifyListeners();
     } catch (e) {
@@ -72,8 +73,13 @@ class RecordingService extends ChangeNotifier {
   }
 
   cancelRecord() async {
+    _stopTimer();
     await _record.pause();
+    // storageService.
+    // var ref = ProviderContainer();
     await _record.dispose();
+    // if (_recordPath != null) ref.read(storageService).deleteItem(_recordPath!);
+    // ref.dispose();
   }
 
   Future<bool> isRecording() async => await _record.isRecording();

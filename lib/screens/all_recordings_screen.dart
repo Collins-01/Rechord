@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rechord/providers/fetch_all_recordings.dart';
 import 'package:rechord/screens/components/build_record_count.dart';
 import 'package:rechord/screens/components/play_record_modal.dart';
 import 'package:rechord/services/storage_service.dart';
@@ -88,13 +87,13 @@ class _AllRecordingsScreenState extends ConsumerState<AllRecordingsScreen> {
                         size: 24,
                       ),
                     ),
-                    title: const Text(
-                      "My Recording",
-                      style: TextStyle(color: Colors.white),
+                    title: Text(
+                      model.recordList[index].name,
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    subtitle: const Text(
-                      "2/01/2001",
-                      style: TextStyle(
+                    subtitle: Text(
+                      model.recordList[index].date,
+                      style: const TextStyle(
                         color: Color(0xff484848),
                       ),
                     ),
