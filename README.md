@@ -6,7 +6,6 @@ A flutter application that allows you record audio/sound.
 - flutter_riverpod `state-management`
 - hooks_riverpod `Easy Use of Statemanagement`
 - path_provider `For Locating Paths in user's device`
-- flutter_secure_storage `Caching of recorded files`
 - intl `Formatting of DateTime`
 - flutter `v2.5.0 - mobile sdk`
 - simple_ripple_animation `For Ripple ANimation Effect`
