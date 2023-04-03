@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rechord/services/storage_service.dart';
 import 'package:record/record.dart';
 
 class RecordingService extends ChangeNotifier {

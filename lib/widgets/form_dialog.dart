@@ -45,12 +45,12 @@ class FormDialog extends StatelessWidget {
                         saveCallBack(_controller.text);
                       } else {
                         // ignore: deprecated_member_use
-                        _scaffoldKey.currentState!.showSnackBar(
-                          const SnackBar(
-                            backgroundColor: AppColors.kBlue,
-                            content: Text("please provide a name"),
-                          ),
-                        );
+                        // _scaffoldKey.currentState!.showSnackBar(
+                        //   const SnackBar(
+                        //     backgroundColor: AppColors.kBlue,
+                        //     content: Text("please provide a name"),
+                        //   ),
+                        // );
                       }
                     },
                     child: const Text("Save"),
@@ -90,12 +90,12 @@ class FormDialog extends StatelessWidget {
                         saveCallBack(_controller.text);
                       } else {
                         // ignore: deprecated_member_use
-                        _scaffoldKey.currentState!.showSnackBar(
-                          const SnackBar(
-                            backgroundColor: AppColors.kBlue,
-                            content: Text("please provide a name"),
-                          ),
-                        );
+                        // _scaffoldKey.currentState!.showSnackBar(
+                        //   const SnackBar(
+                        //     backgroundColor: AppColors.kBlue,
+                        //     content: Text("please provide a name"),
+                        //   ),
+                        // );
                       }
                     },
                     child: const Text("Save"),
